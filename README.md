@@ -102,6 +102,11 @@ vpc:
           id: "${PUBLIC_SUBNET_C}"
   publicAccessCIDRs:
     - ${MY_IP}/32
+
+  clusterEndpoints:
+    publicAccess:  true
+    privateAccess: true
+
 cloudWatch:
   clusterLogging:
     enableTypes: ["audit"]
@@ -113,6 +118,14 @@ secretsEncryption:
 iam:
   withOIDC: true  
 
+addons:
+- name: vpc-cni
+  version: 1.9.3
+- name: coredns
+  version: 1.8.4
+- name: kube-proxy
+  version: 1.21.2
+
 EOF
 ```
 
@@ -121,3 +134,7 @@ EOF
 ```shell
 eksctl create cluster  -f ekscluster.yaml
 ```
+
+### Deploying Kubernetes Dashboard
+See [EKS Dashboard Deployment Tutorial](https://docs.aws.amazon.com/eks/latest/userguide/dashboard-tutorial.html)
+Deploy dashboard version v2.4.0
