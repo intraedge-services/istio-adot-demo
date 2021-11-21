@@ -207,10 +207,13 @@ aws amp create-workspace --alias $STACK_NAME
 ./scripts/createIRSA-AMPIngest.sh
 ```
 
+See https://docs.aws.amazon.com/prometheus/latest/userguide/set-up-irsa.html#set-up-irsa-ingest for more details.
+
 #### Create Prometheus ADOT Daemonset
 
 ```shell
 export AMP_WORKSPACE_ID=$(aws amp list-workspaces | jq --arg amp_alias "$STACK_NAME"   -r '.workspaces | .[] | select(.alias == $amp_alias) | .workspaceId')
-export AMP_ENDPOINT="https://aps-workspaces.$AWS_REGION.amazonaws.com/workspaces/$AMP_WORKSPACE_ID/api/v1/remote_write"export AWS_ACCOUNT_ID=$(aws sts get-caller-identity | jq -r '.Account')
+export AMP_ENDPOINT="https://aps-workspaces.$AWS_REGION.amazonaws.com/workspaces/$AMP_WORKSPACE_ID/api/v1/remote_write"
+export AWS_ACCOUNT_ID=$(aws sts get-caller-identity | jq -r '.Account')
 cat manifests/prometheus-adot-daemonset.yaml | envsubst | kubectl apply -f -
 ```

@@ -1,6 +1,8 @@
 #!/bin/bash -e
+
+# See https://docs.aws.amazon.com/prometheus/latest/userguide/set-up-irsa.html#set-up-irsa-ingest
 CLUSTER_NAME=$STACK_NAME
-SERVICE_ACCOUNT_NAMESPACE=$STACK_NAME
+SERVICE_ACCOUNT_NAMESPACE=adot-col
 AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query "Account" --output text)
 OIDC_PROVIDER=$(aws eks describe-cluster --name $CLUSTER_NAME --query "cluster.identity.oidc.issuer" --output text | sed -e "s/^https:\/\///")
 SERVICE_ACCOUNT_AMP_INGEST_NAME=amp-iamproxy-ingest-service-account
