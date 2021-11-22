@@ -168,6 +168,8 @@ istioctl install
 
 ### Setup Sample App
 
+See [Istio BookInfo example for reference architecture](https://istio.io/latest/docs/examples/bookinfo/)
+
 ```shell
 kubectl label namespace default istio-injection=enabled
 
@@ -186,8 +188,6 @@ export GATEWAY_URL=$INGRESS_HOST:$INGRESS_PORT
 ### Observability Add Ons
 
 ```shell
-kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.11/samples/addons/prometheus.yaml
-kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.11/samples/addons/kiali.yaml
 kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.11/samples/addons/grafana.yaml
 kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.11/samples/addons/jaeger.yaml
 
@@ -216,4 +216,30 @@ export AMP_WORKSPACE_ID=$(aws amp list-workspaces | jq --arg amp_alias "$STACK_N
 export AMP_ENDPOINT="https://aps-workspaces.$AWS_REGION.amazonaws.com/workspaces/$AMP_WORKSPACE_ID/api/v1/remote_write"
 export AWS_ACCOUNT_ID=$(aws sts get-caller-identity | jq -r '.Account')
 cat manifests/prometheus-adot-daemonset.yaml | envsubst | kubectl apply -f -
+```
+
+### Sigv4 Admission Controller
+We need this to allow injection of sidecar to Kiali to make calls to AWS
+
+See https://github.com/aws-observability/aws-sigv4-proxy-admission-controller
+
+```shell
+kubectl create namespace aws-sigv4-proxy           
+kubectl label namespace aws-sigv4-proxy  istio-injection=false
+helm repo add eks https://aws.github.io/eks-charts
+helm install aws-sigv4-proxy-admission-controller eks/aws-sigv4-proxy-admission-controller --namespace aws-sigv4-proxy
+```
+
+### Kiali
+
+```shell
+# Local
+# kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.11/samples/addons/prometheus.yaml
+# kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.11/samples/addons/kiali.yaml
+
+# AMP
+export STACK_NAME=istio-otel-demo
+export AWS_ACCOUNT_ID=$(aws sts get-caller-identity | jq -r '.Account')
+export AMP_WORKSPACE_ID=$(aws amp list-workspaces | jq --arg amp_alias "$STACK_NAME"   -r '.workspaces | .[] | select(.alias == $amp_alias) | .workspaceId')
+cat manifests/kiali.yaml | envsubst | kubectl apply -f -
 ```

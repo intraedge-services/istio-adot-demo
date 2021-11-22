@@ -51,7 +51,7 @@ data:
             - replacement: kubernetes.default.svc:443
               target_label: __address__
             - regex: (.+)
-              replacement: /api/v1/nodes/$1/proxy/metrics
+              replacement: /api/v1/nodes/$${1}/proxy/metrics
               source_labels:
               - __meta_kubernetes_node_name
               target_label: __metrics_path__
@@ -69,7 +69,7 @@ data:
             - replacement: kubernetes.default.svc:443
               target_label: __address__
             - regex: (.+)
-              replacement: /api/v1/nodes/$1/proxy/metrics/cadvisor
+              replacement: /api/v1/nodes/$${1}/proxy/metrics/cadvisor
               source_labels:
               - __meta_kubernetes_node_name
               target_label: __metrics_path__
@@ -97,7 +97,7 @@ data:
               target_label: __metrics_path__
             - action: replace
               regex: ([^:]+)(?::\d+)?;(\d+)
-              replacement: $1:$2
+              replacement: $${1}:$${2}
               source_labels:
               - __address__
               - __meta_kubernetes_service_annotation_prometheus_io_port
@@ -136,7 +136,7 @@ data:
               target_label: __metrics_path__
             - action: replace
               regex: ([^:]+)(?::\d+)?;(\d+)
-              replacement: $1:$2
+              replacement: $${1}:$${1}
               source_labels:
               - __address__
               - __meta_kubernetes_service_annotation_prometheus_io_port
@@ -214,7 +214,7 @@ data:
               target_label: __metrics_path__
             - action: replace
               regex: ([^:]+)(?::\d+)?;(\d+)
-              replacement: $1:$2
+              replacement: $${1}:$${2}
               source_labels:
               - __address__
               - __meta_kubernetes_pod_annotation_prometheus_io_port
@@ -253,7 +253,7 @@ data:
               target_label: __metrics_path__
             - action: replace
               regex: ([^:]+)(?::\d+)?;(\d+)
-              replacement: $1:$2
+              replacement: $${1}:$${1}
               source_labels:
               - __address__
               - __meta_kubernetes_pod_annotation_prometheus_io_port
@@ -283,7 +283,7 @@ data:
         aws_auth:
           region: "$AWS_REGION"
           service: "aps"
-        namespace: "adot"
+
       logging:
         loglevel: debug
 
@@ -311,8 +311,8 @@ metadata:
     eks.amazonaws.com/role-arn: arn:aws:iam::$AWS_ACCOUNT_ID:role/amp-iamproxy-ingest-role
 
 ---
-kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
 metadata:
   name: adotcol-admin-role
 rules:
@@ -320,6 +320,7 @@ rules:
     resources:
       - nodes
       - nodes/proxy
+      - nodes/metrics
       - services
       - endpoints
       - pods
