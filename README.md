@@ -2,6 +2,9 @@
 
 Istio Demo with AWS Distribution of Open Telemetry
 
+## Deployment Architecture
+![Deployment Architecture](https://lucid.app/publicSegments/view/fb4a0216-b359-4d1b-9e89-e5fe27a739d4/image.png)
+
 ## Setup
 
 ### Global Variables
