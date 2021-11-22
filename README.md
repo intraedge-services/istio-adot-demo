@@ -5,6 +5,11 @@ Istio Demo with AWS Distribution of Open Telemetry
 ## Deployment Architecture
 ![Deployment Architecture](https://lucid.app/publicSegments/view/fb4a0216-b359-4d1b-9e89-e5fe27a739d4/image.png)
 
+## Sample Application Architecture
+This demonstration utilizes sample bookinfo example by Istio.
+
+[![Istio Bookinfo Application](https://istio.io/latest/docs/examples/bookinfo/noistio.svg)](https://istio.io/latest/docs/examples/bookinfo/)
+
 ## Setup
 
 ### Global Variables
