@@ -243,3 +243,10 @@ export AWS_ACCOUNT_ID=$(aws sts get-caller-identity | jq -r '.Account')
 export AMP_WORKSPACE_ID=$(aws amp list-workspaces | jq --arg amp_alias "$STACK_NAME"   -r '.workspaces | .[] | select(.alias == $amp_alias) | .workspaceId')
 cat manifests/kiali.yaml | envsubst | kubectl apply -f -
 ```
+
+To launch Kiali, execute
+```shell
+istioctl dashboard kiali
+```
+
+[Launch Kiali Dashboard](http://localhost:20001/kiali/console/graph/namespaces/?edges=trafficRate%2CresponseTime%2Crt95&traffic=grpc%2CgrpcRequest%2Chttp%2ChttpRequest%2Ctcp%2CtcpSent&graphType=versionedApp&namespaces=default&idleNodes=false&duration=60&refresh=15000&operationNodes=false&idleEdges=false&injectServiceNodes=true&layout=dagre)
