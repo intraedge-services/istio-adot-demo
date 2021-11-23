@@ -1,6 +1,11 @@
 # istio-adot-demo
 
-Istio Demo with AWS Distribution of Open Telemetry
+Istio Demo with AWS Distribution of Open Telemetry and Datadog.
+
+This example provides observability of Istio Service mesh with following destinations:
+- Amazon Managed Prometheus, Amazon Managed Grafana, Kiali
+- Datadog
+- CloudWatch Metrics, XRAY, Service Lense
 
 ## Deployment Architecture
 ![Deployment Architecture](https://lucid.app/publicSegments/view/fb4a0216-b359-4d1b-9e89-e5fe27a739d4/image.png)
@@ -11,6 +16,27 @@ This demonstration utilizes sample bookinfo example by Istio.
 [![Istio Bookinfo Application](https://istio.io/latest/docs/examples/bookinfo/noistio.svg)](https://istio.io/latest/docs/examples/bookinfo/)
 
 ## Setup
+
+### Pre Requisites
+- [eksctl](https://docs.aws.amazon.com/eks/latest/userguide/eksctl.html)
+- [awscli v2](https://aws.amazon.com/cli/)
+- [jq](https://stedolan.github.io/jq/download/)
+- [AWS Account](https://aws.amazon.com/free/)
+- [VPC Setup](#vpc-setup)
+
+### VPC Setup
+This demo requires deployment across 3 AZ and a total of 6 subnets.
+
+- 3 Public Subnets (Deployed in zones a, b, c) e.g. us-east-1a, us-east-1b, us-east-1c
+- 3 Private App Subnets (Deployed in zones a,b,c )
+
+If you do not have a VPC setupr eady, you may use: [VPC QuickStart Guide](https://aws-quickstart.github.io/quickstart-aws-vpc/)
+to create reference VPC for this demo.
+
+### Tag VPC Subnets
+
+Follow [eks-vpc-subnet-discovery blog post](https://aws.amazon.com/premiumsupport/knowledge-center/eks-vpc-subnet-discovery/) to tag the 
+public and private(app) subnets appropriately.
 
 ### Global Variables
 
@@ -39,10 +65,6 @@ export GATEWAY_URL=$INGRESS_HOST:$INGRESS_PORT
 export KUBECONFIG=~/.kubeconfig/$STACK_NAME 
 
 ```
-
-### Pre Requisites
-- [eksctl](https://docs.aws.amazon.com/eks/latest/userguide/eksctl.html)
-- [awscli v2](https://aws.amazon.com/cli/)
 
 ### Login to AWS
 
